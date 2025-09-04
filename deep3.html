@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday Deepika 🎉</title>
+<style>
+body {
+  margin: 0;
+  font-family: 'Comic Sans MS', cursive;
+  background: black;
+  overflow: hidden;
+  color: blue;
+  text-align: center;
+}
+.intro, .game { position: absolute; top:50%; left:50%; transform: translate(-50%,-50%); text-align:center; }
+h1 { font-size:3.5em; color:red; animation: zoomIn 1.5s ease-out; }
+@keyframes zoomIn { 0% { transform: scale(0); opacity:0 } 100% { transform: scale(1); opacity:1 } }
+.line { font-size:1.5em; margin-top:10px; opacity:0; transition: opacity 1s; color:white; }
+.buttons { margin-top:20px; }
+button { font-size:1.2em; margin:10px; padding:10px 20px; border:none; border-radius:10px; background:#ff4d6d; color:white; cursor:pointer; box-shadow:0 4px 6px rgba(0,0,0,0.2); transition: transform 0.2s; }
+button:hover { transform: scale(1.1); }
+.game { display:none; color:blue; }
+#gameText { font-size:2em; margin-bottom:20px; animation:bounce 1s infinite alternate; }
+@keyframes bounce { from{transform:translateY(0);} to{transform:translateY(-10px);} }
+.balloon { position:absolute; width:60px; height:80px; background: radial-gradient(circle at 30% 30%, #ff6666, #cc0000); border-radius:50%; cursor:pointer; animation: fall linear forwards; }
+.funnyText { position:absolute; background:white; color:black; padding:10px 15px; border-radius:20px; font-size:1.2em; max-width:250px; text-align:center; box-shadow:2px 2px 8px rgba(0,0,0,0.3); animation:fadeOut 4s forwards; z-index:100; }
+.funnyText::after { content:''; position:absolute; bottom:-10px; left:50%; transform:translateX(-50%); border-width:10px; border-style:solid; border-color:white transparent transparent transparent; }
+@keyframes fall { from{top:-100px;} to{top:110%;} }
+@keyframes fadeOut { 0%{opacity:1;} 100%{opacity:0;} }
+.ouch { position:absolute; top:10%; left:50%; transform:translateX(-50%); font-size:2em; color:purple; animation:fadeOut 2s forwards; }
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Deeeeepikaaaaaa 🎉🥳🎂</h1>
+  <div id="lines">
+    <div class="line">Welcome madam ji 🙏</div>
+    <div class="line">Hum dhanya hue jo aap yaha aaye 😍</div>
+    <div class="line">Chalo fir aapko kuch dikhaati hu 🎁</div>
+    <div class="line">Toh kya aapki permission hai? 😏</div>
+  </div>
+  <div class="buttons" style="display:none;">
+    <button onclick="startGame()">Yes 😇✨</button>
+    <button onclick="startGame()">Yes 😂🔥</button>
+  </div>
+</div>
+
+<div class="game">
+  <div id="gameText">Pop these balloons 🎈🎶</div>
+</div>
+
+<script>
+const lines = document.querySelectorAll('.line');
+const buttons = document.querySelector('.buttons');
+let currentLine = 0;
+function showLines(){
+  if(currentLine<lines.length){
+    lines[currentLine].style.opacity=1;
+    currentLine++;
+    setTimeout(showLines,2000);
+  }else{ buttons.style.display="block"; }
+}
+setTimeout(showLines,1500);
+
+const game = document.querySelector('.game');
+const intro = document.querySelector('.intro');
+let audioIndex=1;
+let balloonInterval;
+
+const funnyMessages=[
+"Arre phod diya mujhe 💥😂",
+"Oye hoye tu toh strong nikli 💪😆",
+"Bas kar Deepika, mai mar jaunga 😵🎈",
+"Cake kha le, balloon kyu phod rahi hai 🎂🤣",
+"Tu hai danger girl 😱🔥",
+"Phod phod ke hero ban rahi hai kya? 😏🎉",
+"Ouch! Bada dard hua 😖😂",
+"Madam ji thoda reham karo 🙏🤣",
+"Balloon bhi soche — ye dosti khatarnaak hai 😆🎈",
+"Deepika = Balloon terminator 🤖💥",
+"Happy Birthday Queen 👑🎂🥳"
+];
+
+function startGame(){
+  intro.style.display='none';
+  game.style.display='block';
+  balloonInterval=setInterval(spawnBalloons,800);
+}
+
+function spawnBalloons(){
+  if(audioIndex>11){ clearInterval(balloonInterval); return; }
+  const balloon=document.createElement('div');
+  balloon.className='balloon';
+  balloon.style.left=Math.random()*90+'vw';
+  balloon.style.animationDuration=(Math.random()*3+4)+'s';
+  balloon.onclick=(e)=>{
+    const rect=balloon.getBoundingClientRect();
+    showFunnyText(funnyMessages[audioIndex-1],rect.left+rect.width/2,rect.top);
+    balloon.remove();
+    playAudio();
+  };
+  document.body.appendChild(balloon);
+}
+
+function playAudio(){
+  if(audioIndex<=11){
+    const audio=new Audio(`s${audioIndex}.mp3`);
+    audio.play();
+    if(audioIndex===3) showOuch();
+    if(audioIndex===11){
+      audio.onended=()=>{ fadeOutGameText(); }
+    }
+    audioIndex++;
+  }
+}
+
+function showFunnyText(text,x,y){
+  const funny=document.createElement('div');
+  funny.className='funnyText';
+  funny.textContent=text;
+  document.body.appendChild(funny);
+  funny.style.left=x+'px';
+  funny.style.top=(y-60)+'px';
+  setTimeout(()=>funny.remove(),4000);
+}
+
+function showOuch(){
+  const ouch=document.createElement('div');
+  ouch.className='ouch';
+  ouch.textContent="Ouch! 😖";
+  document.body.appendChild(ouch);
+  setTimeout(()=>ouch.remove(),2000);
+}
+
+function fadeOutGameText(){
+  const gameText=document.getElementById('gameText');
+  gameText.style.transition="opacity 2s";
+  gameText.style.opacity=0;
+  setTimeout(showMakeAWish,2000);
+}
+
+function showMakeAWish(){
+  const wish=document.createElement('div');
+  wish.textContent="Make a wish! 🎂✨";
+  wish.style.position="absolute";
+  wish.style.top="45%";
+  wish.style.left="50%";
+  wish.style.transform="translate(-50%,-50%)";
+  wish.style.fontSize="3em";
+  wish.style.color="#FFD700";
+  wish.style.fontWeight="bold";
+  wish.style.textShadow="2px 2px 5px black";
+  wish.style.opacity=0;
+  wish.style.transition="opacity 2s";
+  document.body.appendChild(wish);
+  setTimeout(()=>{ wish.style.opacity=1; },100);
+
+  // Surprise button
+  const btn=document.createElement('button');
+  btn.innerHTML="🎁 Click for Surprise 🎉";
+  btn.style.position="absolute";
+  btn.style.top="60%";
+  btn.style.left="50%";
+  btn.style.transform="translate(-50%,-50%)";
+  btn.style.fontSize="1.5em";
+  btn.style.background="#FFD700";
+  btn.style.color="black";
+  btn.style.borderRadius="10px";
+  btn.style.padding="15px 25px";
+  btn.style.cursor="pointer";
+  btn.style.boxShadow="0 4px 6px rgba(0,0,0,0.3)";
+
+  btn.onclick=()=>{
+    document.body.style.transition="opacity 2s";
+    document.body.style.opacity=0;
+    setTimeout(()=>{
+      document.body.innerHTML="";
+      document.body.style.opacity=1;
+      // Final heading
+      const heading=document.createElement('div');
+      heading.textContent="Happiest Birthday Drama Queen 🎉👑";
+      heading.style.fontSize="3em";
+      heading.style.color="#FFD700";
+      heading.style.fontWeight="bold";
+      heading.style.textAlign="center";
+      heading.style.marginTop="50px";
+      heading.style.textShadow="2px 2px 5px black";
+      document.body.appendChild(heading);
+      // Cake image
+      const cake=document.createElement('img');
+      cake.src="https://static.vecteezy.com/system/resources/thumbnails/028/597/754/small_2x/chocholate-dripping-happy-birthday-cake-generative-ai-photo.jpg";
+      cake.style.display="block";
+      cake.style.margin="50px auto";
+      cake.style.width="400px";
+      cake.style.height="auto";
+      cake.style.opacity=0;
+      cake.style.transition="opacity 2s";
+      document.body.appendChild(cake);
+      setTimeout(()=>{ cake.style.opacity=1; },100);
+    },2000);
+  };
+
+  document.body.appendChild(btn);
+}
+</script>
+</body>
+</html>
